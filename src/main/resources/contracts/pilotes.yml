@@ -1,0 +1,257 @@
+openapi: "3.0.0"
+info:
+  version: "1.0.0"
+  title: "Pilotes management application"
+paths:
+  /customer-care/customer:
+    post:
+      tags:
+        - Private
+      summary: "Inserisce nuovo customer"
+      operationId: "inserisciCustomer"
+      parameters:
+        - name: "input"
+          in: query
+          description: "input dto per inserire customer"
+          required: true
+          schema:
+            $ref: "#/components/schemas/InserimentoCustomerRequest"
+      responses:
+        '200':
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        '404':
+          description: "Data not found"
+        '500':
+          description: "Internal error"
+  /customer-care/modifica/customer/{codiceFiscale}:
+    patch:
+      tags:
+        - Private
+      summary: "Modifica dell' indirizzo del customer"
+      operationId: "modificaIndirizzoCustomer"
+      parameters:
+        - name: codiceFiscale
+          description: codice fiscale del customer
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: customerRequest
+          in: query
+          description: "Customer"
+          required: true
+          schema:
+            $ref: "#/definitions/CustomerRequest"
+      responses:
+        '200':
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        '404':
+          description: "Data not found"
+        '500':
+          description: "Internal error"
+  /customer-care/modifica/device/{uuid}:
+    patch:
+      tags:
+        - Private
+      summary: "Modifica lo stato del device"
+      operationId: "modificaStatoDevice"
+      parameters:
+        - name: uuid
+          description: uuid del device
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: deviceRequest
+          in: query
+          description: "PilotesOrder"
+          required: true
+          schema:
+            $ref: "#/definitions/DeviceRequest"
+      responses:
+        '200':
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        '404':
+          description: "Data not found"
+        '500':
+          description: "Internal error"
+  /customer-care/customers:
+    get:
+      tags:
+        - Private
+      summary: "Restituisce tutti i customers presenti"
+      operationId: "getAllCustomers"
+      responses:
+        '200':
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllCustomerResponse'
+        '404':
+          description: "Data not found"
+        '500':
+          description: "Internal error"
+  /customer-care/customers/{codiceFiscale}:
+    get:
+      tags:
+        - Private
+      summary: "Restituisce tutti i customers presenti"
+      operationId: "findCustomerByCodiceFiscale"
+      parameters:
+        - name: codiceFiscale
+          description: codice fiscale del customer
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerDTO'
+        '404':
+          description: "Data not found"
+        '500':
+          description: "Internal error"
+  /customer-care/device/{uuid}:
+    get:
+      tags:
+        - Private
+      summary: "Restituisce se un device è presente"
+      operationId: "isDevicePresent"
+      parameters:
+        - name: uuid
+          description: uuid del device
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsDevicePresent'
+        '404':
+          description: "Data not found"
+        '500':
+          description: "Internal error"
+  /customer-care/delete/device/{uuid}:
+    delete:
+      tags:
+        - Private
+      summary: "Cancella un device tramite uuid"
+      operationId: "deleteDevice"
+      parameters:
+        - name: uuid
+          description: uuid del device
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        '404':
+          description: "Data not found"
+        '500':
+          description: "Internal error"
+
+components:
+  schemas:
+    InserimentoCustomerRequest:
+      type: object
+      required:
+        - nome
+        - cognome
+        - codiceFiscale
+        - indirizzo
+      properties:
+        nome:
+          type: string
+        cognome:
+          type: string
+        codiceFiscale:
+          type: string
+        indirizzo:
+          type: string
+        devices:
+          type: "array"
+          items:
+            $ref: '#/components/schemas/DeviceDTO'
+    CustomerResponse:
+      type: object
+      required:
+        - success
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+    DeviceDTO:
+      type: object
+      properties:
+        stato:
+          type: string
+        uuid:
+          type: string
+    CustomerRequest:
+      type: object
+      properties:
+        indirizzo:
+          type: string
+    DeviceRequest:
+      type: object
+      properties:
+        stato:
+          type: string
+    AllCustomerResponse:
+      type: object
+      properties:
+        customers:
+          type: "array"
+          items:
+            $ref: '#/components/schemas/CustomerDTO'
+    CustomerDTO:
+      type: object
+      properties:
+        nome:
+          type: string
+        cognome:
+          type: string
+        codiceFiscale:
+          type: string
+        indirizzo:
+          type: string
+        devices:
+          type: "array"
+          items:
+            $ref: '#/components/schemas/DeviceDTO'
+    IsDevicePresent:
+      type: object
+      properties:
+        isPresent:
+          type: boolean
+
+
+

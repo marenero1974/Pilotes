@@ -1,2 +1,2 @@
 # Pilotes
-Manage Pilotes orders by restfull apis
+Manage Pilotes orders by restful apis

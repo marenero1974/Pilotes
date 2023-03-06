@@ -1,0 +1,41 @@
+package {{configPackage}};
+import com.atlassian.oai.validator.OpenApiInteractionValidator;
+import com.atlassian.oai.validator.springmvc.OpenApiValidationInterceptor;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+@Configuration
+public class {{title}}ValidatorConfig implements WebMvcConfigurer {
+    private static Logger logger = LoggerFactory.getLogger({{title}}ValidatorConfig.class);
+    private static final String PATH_PARAM = "\\{.*}";
+    private static final String ALL_AFTER_SLASH = "\\//.*";
+    private static final String PATH_PARAM_INTERNAL = "\\{.*}\\/";
+    private Map<String,String> paths = new HashMap<>();
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        String file = "{{inputSpec}}";
+        file = file.replaceAll(".*/resources","");
+        logger.debug("Creating Validator using file: {}",file);
+        {{#apiInfo}}
+        {{#apis}}
+        {{#operations}}
+        {{#operation}}
+        paths.put("{{contextRoot}}{{path}}".replaceAll(PATH_PARAM_INTERNAL, "**/").replaceAll(PATH_PARAM, "**").replaceAll(ALL_AFTER_SLASH, ""),"path");
+        {{/operation}}
+        {{/operations}}
+        {{/apis}}
+        {{/apiInfo}}
+        List<String> p = new ArrayList<>(paths.keySet());
+        logger.debug("Adding validator interceptor {} to paths: {}",{{title}}ValidatorConfig.class.getName(),p);
+        OpenApiInteractionValidator validator = OpenApiInteractionValidator
+                .createForSpecificationUrl(file).build();
+        OpenApiValidationInterceptor openApiValidationInterceptor = new OpenApiValidationInterceptor(validator);
+        registry.addInterceptor(openApiValidationInterceptor).addPathPatterns(p);
+    }
+}
