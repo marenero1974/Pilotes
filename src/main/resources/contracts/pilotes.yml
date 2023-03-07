@@ -9,13 +9,13 @@ paths:
         - Private
       summary: "Insert a new customer"
       operationId: "insertCustomer"
-      parameters:
-        - name: "input"
-          in: query
-          description: "input dto for insert customer"
-          required: true
-          schema:
-            $ref: "#/components/schemas/InsertCustomerRequest"
+      requestBody:
+        description: Customer request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InsertCustomerRequest'
       responses:
         '200':
           description: "successful operation"
@@ -82,6 +82,13 @@ paths:
         - Private
       summary: "Modify order"
       operationId: "modifyPilotesOrder"
+      requestBody:
+        description: Modify order request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/ModifyOrderRequest'
       parameters:
         - name: orderNumber
           description: order number
@@ -89,12 +96,6 @@ paths:
           required: true
           schema:
             type: number
-        - name: modifyOrderRequest
-          in: query
-          description: "the order to modify with"
-          required: true
-          schema:
-            $ref: "#/definitions/ModifyOrderRequest"
       responses:
         '200':
           description: "successful operation"
@@ -142,6 +143,7 @@ components:
         - name
         - surname
         - telephoneNumber
+        - pilotesOrder
       properties:
         name:
           type: string
@@ -149,8 +151,11 @@ components:
           type: string
         telephoneNumber:
           type: string
-        indirizzo:
-          type: string
+        pilotesOrders:
+          type: array
+          items:
+            $ref: '#/components/schemas/PilotesOrder'
+
     Customer:
       type: object
       properties:
@@ -175,8 +180,6 @@ components:
           type: integer
         totalOrderAmount:
           type: number
-        customer:
-          $ref: '#/components/schemas/Customer'
     ModifyOrderRequest:
       type: object
       properties:

@@ -8,12 +8,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
-import java.util.Objects;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -31,7 +28,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @EqualsAndHashCode
 @Table(name = "pilotes_orders")
 @Entity
-public class PilotesOrder {
+public class PilotesOrderEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "device_GEN")
@@ -51,6 +48,6 @@ public class PilotesOrder {
   @ManyToOne(cascade= CascadeType.ALL)
   @JoinColumn(name = "customer_id")
   @OnDelete(action = OnDeleteAction.CASCADE)
-  private Customer customer;
+  private CustomerEntity customerEntity;
 
 }

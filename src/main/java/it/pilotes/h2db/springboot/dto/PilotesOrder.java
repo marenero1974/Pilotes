@@ -5,14 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import it.pilotes.h2db.springboot.dto.Customer;
 import java.math.BigDecimal;
 import org.openapitools.jackson.nullable.JsonNullable;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-07T18:31:08.579248400+01:00[Europe/Rome]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-07T22:31:07.048105500+01:00[Europe/Rome]")
 public class PilotesOrder   {
   @JsonProperty("orderNumber")
   private BigDecimal orderNumber;
@@ -25,9 +24,6 @@ public class PilotesOrder   {
 
   @JsonProperty("totalOrderAmount")
   private BigDecimal totalOrderAmount;
-
-  @JsonProperty("customer")
-  private Customer customer;
 
   /**
    **/
@@ -97,23 +93,6 @@ public class PilotesOrder   {
     this.totalOrderAmount = totalOrderAmount;
   }
 
-  /**
-   **/
-  public PilotesOrder customer(Customer customer) {
-    this.customer = customer;
-    return this;
-  }
-
-  
-  @ApiModelProperty(value = "")
-  @JsonProperty("customer")
-  public Customer getCustomer() {
-    return customer;
-  }
-  public void setCustomer(Customer customer) {
-    this.customer = customer;
-  }
-
 
   @Override
   public boolean equals(Object o) {
@@ -127,13 +106,12 @@ public class PilotesOrder   {
     return Objects.equals(orderNumber, pilotesOrder.orderNumber) &&
         Objects.equals(deliveryAddress, pilotesOrder.deliveryAddress) &&
         Objects.equals(pilotesNumber, pilotesOrder.pilotesNumber) &&
-        Objects.equals(totalOrderAmount, pilotesOrder.totalOrderAmount) &&
-        Objects.equals(customer, pilotesOrder.customer);
+        Objects.equals(totalOrderAmount, pilotesOrder.totalOrderAmount);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(orderNumber, deliveryAddress, pilotesNumber, totalOrderAmount, customer);
+    return Objects.hash(orderNumber, deliveryAddress, pilotesNumber, totalOrderAmount);
   }
 
   @Override
@@ -145,7 +123,6 @@ public class PilotesOrder   {
     sb.append("    deliveryAddress: ").append(toIndentedString(deliveryAddress)).append("\n");
     sb.append("    pilotesNumber: ").append(toIndentedString(pilotesNumber)).append("\n");
     sb.append("    totalOrderAmount: ").append(toIndentedString(totalOrderAmount)).append("\n");
-    sb.append("    customer: ").append(toIndentedString(customer)).append("\n");
     sb.append("}");
     return sb.toString();
   }

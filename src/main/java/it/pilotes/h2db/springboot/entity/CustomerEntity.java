@@ -26,7 +26,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 @Table(name = "customer")
 @Entity
-public class Customer {
+public class CustomerEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_GEN")
@@ -39,6 +39,6 @@ public class Customer {
     @Column(unique=true)
     private String telephone;
 
-    @OneToMany(mappedBy="customer", cascade= CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<PilotesOrder> pilotesOrders;
+    @OneToMany(mappedBy= "customerEntity", cascade= CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<PilotesOrderEntity> pilotesOrderEntities;
 }

@@ -5,12 +5,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import it.pilotes.h2db.springboot.dto.PilotesOrder;
+import java.util.ArrayList;
+import java.util.List;
 import org.openapitools.jackson.nullable.JsonNullable;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-07T18:31:08.579248400+01:00[Europe/Rome]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-07T22:31:07.048105500+01:00[Europe/Rome]")
 public class InsertCustomerRequest   {
   @JsonProperty("name")
   private String name;
@@ -21,8 +24,8 @@ public class InsertCustomerRequest   {
   @JsonProperty("telephoneNumber")
   private String telephoneNumber;
 
-  @JsonProperty("indirizzo")
-  private String indirizzo;
+  @JsonProperty("pilotesOrders")
+  private List<PilotesOrder> pilotesOrders = null;
 
   /**
    **/
@@ -77,19 +80,19 @@ public class InsertCustomerRequest   {
 
   /**
    **/
-  public InsertCustomerRequest indirizzo(String indirizzo) {
-    this.indirizzo = indirizzo;
+  public InsertCustomerRequest pilotesOrders(List<PilotesOrder> pilotesOrders) {
+    this.pilotesOrders = pilotesOrders;
     return this;
   }
 
   
   @ApiModelProperty(value = "")
-  @JsonProperty("indirizzo")
-  public String getIndirizzo() {
-    return indirizzo;
+  @JsonProperty("pilotesOrders")
+  public List<PilotesOrder> getPilotesOrders() {
+    return pilotesOrders;
   }
-  public void setIndirizzo(String indirizzo) {
-    this.indirizzo = indirizzo;
+  public void setPilotesOrders(List<PilotesOrder> pilotesOrders) {
+    this.pilotesOrders = pilotesOrders;
   }
 
 
@@ -105,12 +108,12 @@ public class InsertCustomerRequest   {
     return Objects.equals(name, insertCustomerRequest.name) &&
         Objects.equals(surname, insertCustomerRequest.surname) &&
         Objects.equals(telephoneNumber, insertCustomerRequest.telephoneNumber) &&
-        Objects.equals(indirizzo, insertCustomerRequest.indirizzo);
+        Objects.equals(pilotesOrders, insertCustomerRequest.pilotesOrders);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, surname, telephoneNumber, indirizzo);
+    return Objects.hash(name, surname, telephoneNumber, pilotesOrders);
   }
 
   @Override
@@ -121,7 +124,7 @@ public class InsertCustomerRequest   {
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    surname: ").append(toIndentedString(surname)).append("\n");
     sb.append("    telephoneNumber: ").append(toIndentedString(telephoneNumber)).append("\n");
-    sb.append("    indirizzo: ").append(toIndentedString(indirizzo)).append("\n");
+    sb.append("    pilotesOrders: ").append(toIndentedString(pilotesOrders)).append("\n");
     sb.append("}");
     return sb.toString();
   }

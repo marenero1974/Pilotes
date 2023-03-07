@@ -11,7 +11,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-07T18:31:08.579248400+01:00[Europe/Rome]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-07T22:31:07.048105500+01:00[Europe/Rome]")
 public class ModifyOrderRequest   {
   @JsonProperty("orderNumber")
   private BigDecimal orderNumber;
