@@ -3,116 +3,118 @@ info:
   version: "1.0.0"
   title: "Pilotes management application"
 paths:
-  /customer-care/customer:
+  /pilotes-manager/customer:
     post:
       tags:
         - Private
-      summary: "Inserisce nuovo customer"
-      operationId: "inserisciCustomer"
+      summary: "Insert a new customer"
+      operationId: "insertCustomer"
       parameters:
         - name: "input"
           in: query
-          description: "input dto per inserire customer"
+          description: "input dto for insert customer"
           required: true
           schema:
-            $ref: "#/components/schemas/InserimentoCustomerRequest"
+            $ref: "#/components/schemas/InsertCustomerRequest"
       responses:
         '200':
           description: "successful operation"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomerResponse'
+                $ref: '#/components/schemas/Customer'
         '404':
           description: "Data not found"
         '500':
           description: "Internal error"
-  /customer-care/modifica/customer/{codiceFiscale}:
+  /pilotes-manager/order/{customerTelephone}/pilotes/{numberOfPilotes}:
+    post:
+      tags:
+        - Private
+      summary: "Insert a new pilotes order by customer telephone"
+      operationId: "insertPilotesOrder"
+      parameters:
+        - name: customerTelephone
+          description: customer telephone
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: numberOfPilotes
+          description: number of pilotes
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PilotesOrder'
+        '404':
+          description: "Data not found"
+        '500':
+          description: "Internal error"
+  /pilotes-manager/orders/pilotes:
+    get:
+      tags:
+        - Private
+      summary: "Get all orders"
+      operationId: "getAllPilotesOrders"
+      responses:
+        '200':
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PilotesOrder'
+        '404':
+          description: "Data not found"
+        '500':
+          description: "Internal error"
+  /pilotes-manager/order/pilotes/{orderNumber}:
     patch:
       tags:
         - Private
-      summary: "Modifica dell' indirizzo del customer"
-      operationId: "modificaIndirizzoCustomer"
+      summary: "Modify order"
+      operationId: "modifyPilotesOrder"
       parameters:
-        - name: codiceFiscale
-          description: codice fiscale del customer
+        - name: orderNumber
+          description: order number
           in: path
           required: true
           schema:
-            type: string
-        - name: customerRequest
+            type: number
+        - name: modifyOrderRequest
           in: query
-          description: "Customer"
+          description: "the order to modify with"
           required: true
           schema:
-            $ref: "#/definitions/CustomerRequest"
+            $ref: "#/definitions/ModifyOrderRequest"
       responses:
         '200':
           description: "successful operation"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomerResponse'
+                $ref: '#/components/schemas/PilotesOrder'
         '404':
           description: "Data not found"
         '500':
           description: "Internal error"
-  /customer-care/modifica/device/{uuid}:
-    patch:
-      tags:
-        - Private
-      summary: "Modifica lo stato del device"
-      operationId: "modificaStatoDevice"
-      parameters:
-        - name: uuid
-          description: uuid del device
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: deviceRequest
-          in: query
-          description: "PilotesOrder"
-          required: true
-          schema:
-            $ref: "#/definitions/DeviceRequest"
-      responses:
-        '200':
-          description: "successful operation"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomerResponse'
-        '404':
-          description: "Data not found"
-        '500':
-          description: "Internal error"
-  /customer-care/customers:
+  /pilotes-manager/orders/pilotes/{customerPartialName}:
     get:
       tags:
         - Private
-      summary: "Restituisce tutti i customers presenti"
-      operationId: "getAllCustomers"
-      responses:
-        '200':
-          description: "successful operation"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AllCustomerResponse'
-        '404':
-          description: "Data not found"
-        '500':
-          description: "Internal error"
-  /customer-care/customers/{codiceFiscale}:
-    get:
-      tags:
-        - Private
-      summary: "Restituisce tutti i customers presenti"
-      operationId: "findCustomerByCodiceFiscale"
+      summary: "Get all orders by partial name"
+      operationId: "getAllPilotesOrdersByName"
       parameters:
-        - name: codiceFiscale
-          description: codice fiscale del customer
+        - name: customerPartialName
+          description: customer partial name
           in: path
           required: true
           schema:
@@ -123,135 +125,64 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomerDTO'
+                type: array
+                items:
+                  $ref: '#/components/schemas/PilotesOrder'
         '404':
           description: "Data not found"
         '500':
           description: "Internal error"
-  /customer-care/device/{uuid}:
-    get:
-      tags:
-        - Private
-      summary: "Restituisce se un device è presente"
-      operationId: "isDevicePresent"
-      parameters:
-        - name: uuid
-          description: uuid del device
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: "successful operation"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IsDevicePresent'
-        '404':
-          description: "Data not found"
-        '500':
-          description: "Internal error"
-  /customer-care/delete/device/{uuid}:
-    delete:
-      tags:
-        - Private
-      summary: "Cancella un device tramite uuid"
-      operationId: "deleteDevice"
-      parameters:
-        - name: uuid
-          description: uuid del device
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: "successful operation"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomerResponse'
-        '404':
-          description: "Data not found"
-        '500':
-          description: "Internal error"
+
 
 components:
   schemas:
-    InserimentoCustomerRequest:
+    InsertCustomerRequest:
       type: object
       required:
-        - nome
-        - cognome
-        - codiceFiscale
-        - indirizzo
+        - name
+        - surname
+        - telephoneNumber
       properties:
-        nome:
+        name:
           type: string
-        cognome:
+        surname:
           type: string
-        codiceFiscale:
+        telephoneNumber:
           type: string
         indirizzo:
           type: string
-        devices:
-          type: "array"
+    Customer:
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        telephoneNumber:
+          type: string
+        pilotesOrders:
+          type: array
           items:
-            $ref: '#/components/schemas/DeviceDTO'
-    CustomerResponse:
-      type: object
-      required:
-        - success
-      properties:
-        success:
-          type: boolean
-        message:
-          type: string
-    DeviceDTO:
+            $ref: '#/components/schemas/PilotesOrder'
+    PilotesOrder:
       type: object
       properties:
-        stato:
+        orderNumber:
+          type: number
+        deliveryAddress:
           type: string
-        uuid:
-          type: string
-    CustomerRequest:
+        pilotesNumber:
+          type: integer
+        totalOrderAmount:
+          type: number
+        customer:
+          $ref: '#/components/schemas/Customer'
+    ModifyOrderRequest:
       type: object
       properties:
-        indirizzo:
+        orderNumber:
+          type: number
+        deliveryAddress:
           type: string
-    DeviceRequest:
-      type: object
-      properties:
-        stato:
-          type: string
-    AllCustomerResponse:
-      type: object
-      properties:
-        customers:
-          type: "array"
-          items:
-            $ref: '#/components/schemas/CustomerDTO'
-    CustomerDTO:
-      type: object
-      properties:
-        nome:
-          type: string
-        cognome:
-          type: string
-        codiceFiscale:
-          type: string
-        indirizzo:
-          type: string
-        devices:
-          type: "array"
-          items:
-            $ref: '#/components/schemas/DeviceDTO'
-    IsDevicePresent:
-      type: object
-      properties:
-        isPresent:
-          type: boolean
-
-
-
+        pilotesNumber:
+          type: integer
