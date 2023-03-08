@@ -7,11 +7,13 @@ import it.pilotes.h2db.springboot.dto.PilotesOrder;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 public interface PilotesManagerApi {
 
@@ -44,14 +46,10 @@ public interface PilotesManagerApi {
 
   @RequestMapping(
       value = "/pilotes-manager/order/{customerTelephone}/pilotes/{numberOfPilotes}",
-      produces = {"application/json"},
+      produces = { "application/json" },
       method = RequestMethod.POST
   )
-  ResponseEntity<PilotesOrder> insertPilotesOrder(
-      @PathVariable("customerTelephone") String customerTelephone,
-      @PathVariable("numberOfPilotes") String numberOfPilotes
-
-  );
+  ResponseEntity<PilotesOrder> insertPilotesOrder(@PathVariable("customerTelephone") String customerTelephone, @PathVariable("numberOfPilotes") String numberOfPilotes, @NotNull @RequestParam(value = "deliveryAddress", required = true) String deliveryAddress);
 
   @RequestMapping(
       value = "/pilotes-manager/order/pilotes/{orderNumber}",

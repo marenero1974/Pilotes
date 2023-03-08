@@ -7,8 +7,10 @@ import it.pilotes.h2db.springboot.dto.PilotesOrder;
 import it.pilotes.h2db.springboot.entity.CustomerEntity;
 import it.pilotes.h2db.springboot.entity.PilotesOrderEntity;
 import it.pilotes.h2db.springboot.mapper.CustomerMapper;
+import it.pilotes.h2db.springboot.mapper.PilotesMapper;
 import it.pilotes.h2db.springboot.repositry.CustomerRepository;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -43,7 +45,6 @@ public class PilotesManagerApiController implements PilotesManagerApi {
   @Override
   public ResponseEntity<Customer> insertCustomer(InsertCustomerRequest insertCustomerRequest) {
     logger.debug("Inserting customer {}", insertCustomerRequest);
-    validateInput(insertCustomerRequest);
     CustomerEntity customerEntity = CustomerMapper.mapToEntity(insertCustomerRequest);
     customerEntity.setPilotesOrderEntities(getOrdersWithNumber(customerEntity));
 
@@ -53,25 +54,41 @@ public class PilotesManagerApiController implements PilotesManagerApi {
       logger.info("Customer inserted.");
     } catch (Exception e) {
       logAppError("Error while saving customer", e);
-      return ResponseEntity.internalServerError().body(new Customer());
+      return ResponseEntity.internalServerError().body(null);
     }
 
     return ResponseEntity.ok().body(CustomerMapper.mapToDto(savedCustomer));
-
-  }
-
-  private void validateInput(InsertCustomerRequest insertCustomerRequest) {
-    insertCustomerRequest.getPilotesOrders()
-        .stream()
-        .filter(order -> order.getPilotesNumber() == 5)
-        .collect(Collectors.toList());
   }
 
   @Override
   public ResponseEntity<PilotesOrder> insertPilotesOrder(String customerTelephone,
-      String numberOfPilotes) {
-    return null;
+      String numberOfPilotes, String deliveryAddress) {
+    logger.debug("Inserting new order of {} pilotes on the customer: {}", numberOfPilotes,
+        customerTelephone);
+
+    if (isValidPilotesNumber())
+
+
+    try {
+
+      CustomerEntity customerEntity = customerRepository.findCustomerEntitiesByTelephone(
+          customerTelephone);
+      PilotesOrderEntity pilotesOrderEntity = new PilotesOrderEntity();
+      pilotesOrderEntity.setPilotesNumber(new Integer(numberOfPilotes));
+      pilotesOrderEntity.setOrderNumber(
+          new BigDecimal(calculateRandomOrderNumber(pilotesOrderEntity)));
+      pilotesOrderEntity.setDeliveryAddress(deliveryAddress);
+      pilotesOrderEntity.setCreatedAt(LocalDateTime.now());
+      customerEntity.getPilotesOrderEntities().add(pilotesOrderEntity);
+      customerRepository.save(customerEntity);
+      return ResponseEntity.ok().body(PilotesMapper.mapToDto(pilotesOrderEntity));
+
+    } catch (Exception e) {
+      logAppError("Error while saving customer order", e);
+      return ResponseEntity.internalServerError().body(null);
+    }
   }
+
 
   @Override
   public ResponseEntity<PilotesOrder> modifyPilotesOrder(BigDecimal orderNumber,
@@ -93,14 +110,23 @@ public class PilotesManagerApiController implements PilotesManagerApi {
         .filter(o ->
             // input validation if the number of pilotes is not 5 or
             // 10 or 15 we skip the order
-                o.getPilotesNumber() == 5
-                || o.getPilotesNumber() == 10
-                || o.getPilotesNumber() == 15
+            isValidPilotesNumber(o.getPilotesNumber())
         ).collect(Collectors.toList());
-      list.forEach(p -> {
-        long theRandomNum = (long) (Math.random() * Math.pow(10, 10));
-        p.setOrderNumber(new BigDecimal(theRandomNum));
-      });
-      return list;
+    list.forEach(p -> {
+      calculateRandomOrderNumber(p);
+    });
+    return list;
+  }
+
+  private boolean isValidPilotesNumber(PilotesOrderEntity o) {
+    return o.getPilotesNumber() == 5
+        || o.getPilotesNumber() == 10
+        || o.getPilotesNumber() == 15;
+  }
+
+  private long calculateRandomOrderNumber(PilotesOrderEntity p) {
+    long theRandomNum = (long) (Math.random() * Math.pow(10, 10));
+    p.setOrderNumber(new BigDecimal(theRandomNum));
+    return theRandomNum;
   }
 }
