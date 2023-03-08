@@ -180,6 +180,9 @@ components:
           type: integer
         totalOrderAmount:
           type: number
+        createdAt:
+          type: "string"
+          format: "date-time"
     ModifyOrderRequest:
       type: object
       properties:

@@ -6,6 +6,7 @@ import it.pilotes.h2db.springboot.dto.PilotesOrder;
 import it.pilotes.h2db.springboot.entity.CustomerEntity;
 import it.pilotes.h2db.springboot.entity.PilotesOrderEntity;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,8 +28,10 @@ public class CustomerMapper {
             pilotesOrderEntity.setOrderNumber(p.getOrderNumber());
             pilotesOrderEntity.setPilotesNumber(p.getPilotesNumber());
             pilotesOrderEntity.setDeliveryAddress(p.getDeliveryAddress());
-            pilotesOrderEntity.setTotalOrderAmount(new BigDecimal(1.33*p.getPilotesNumber()));
+            pilotesOrderEntity.setTotalOrderAmount(new BigDecimal(1.33 * p.getPilotesNumber()));
+            pilotesOrderEntity.setCreatedAt(LocalDateTime.now());
             return pilotesOrderEntity;
+
           })
           .collect(Collectors.toList());
       customerEntity.setPilotesOrderEntities(pilotesOrderEntityList);
@@ -38,7 +41,7 @@ public class CustomerMapper {
 
   public static Customer mapToDto(CustomerEntity customerEntity) {
     Customer customerDTO = new Customer();
-    if(customerEntity !=null) {
+    if (customerEntity != null) {
       customerDTO.setName(customerEntity.getName());
       customerDTO.setSurname(customerEntity.getSurname());
       customerDTO.setTelephoneNumber(customerEntity.getTelephone());
@@ -50,6 +53,7 @@ public class CustomerMapper {
             pilotesOrder.setOrderNumber(o.getOrderNumber());
             pilotesOrder.setDeliveryAddress(o.getDeliveryAddress());
             pilotesOrder.setTotalOrderAmount(o.getTotalOrderAmount());
+            pilotesOrder.setCreatedAt(o.getCreatedAt());
             return pilotesOrder;
           })
           .collect(Collectors.toList());

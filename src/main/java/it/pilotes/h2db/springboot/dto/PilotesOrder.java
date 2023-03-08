@@ -1,18 +1,15 @@
 package it.pilotes.h2db.springboot.dto;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
-import org.openapitools.jackson.nullable.JsonNullable;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.util.Objects;
 
 
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-07T22:31:07.048105500+01:00[Europe/Rome]")
-public class PilotesOrder   {
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-08T11:50:48.479657+01:00[Europe/Rome]")
+public class PilotesOrder {
   @JsonProperty("orderNumber")
   private BigDecimal orderNumber;
 
@@ -24,6 +21,9 @@ public class PilotesOrder   {
 
   @JsonProperty("totalOrderAmount")
   private BigDecimal totalOrderAmount;
+
+  @JsonProperty("createdAt")
+  private LocalDateTime createdAt;
 
   /**
    **/
@@ -93,6 +93,23 @@ public class PilotesOrder   {
     this.totalOrderAmount = totalOrderAmount;
   }
 
+  /**
+   **/
+  public PilotesOrder createdAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+    return this;
+  }
+
+  
+  @ApiModelProperty(value = "")
+  @JsonProperty("createdAt")
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -106,12 +123,13 @@ public class PilotesOrder   {
     return Objects.equals(orderNumber, pilotesOrder.orderNumber) &&
         Objects.equals(deliveryAddress, pilotesOrder.deliveryAddress) &&
         Objects.equals(pilotesNumber, pilotesOrder.pilotesNumber) &&
-        Objects.equals(totalOrderAmount, pilotesOrder.totalOrderAmount);
+        Objects.equals(totalOrderAmount, pilotesOrder.totalOrderAmount) &&
+        Objects.equals(createdAt, pilotesOrder.createdAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(orderNumber, deliveryAddress, pilotesNumber, totalOrderAmount);
+    return Objects.hash(orderNumber, deliveryAddress, pilotesNumber, totalOrderAmount, createdAt);
   }
 
   @Override
@@ -123,6 +141,7 @@ public class PilotesOrder   {
     sb.append("    deliveryAddress: ").append(toIndentedString(deliveryAddress)).append("\n");
     sb.append("    pilotesNumber: ").append(toIndentedString(pilotesNumber)).append("\n");
     sb.append("    totalOrderAmount: ").append(toIndentedString(totalOrderAmount)).append("\n");
+    sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("}");
     return sb.toString();
   }

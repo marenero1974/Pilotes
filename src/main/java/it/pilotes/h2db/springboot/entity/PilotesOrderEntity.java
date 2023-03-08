@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -44,6 +45,9 @@ public class PilotesOrderEntity {
   private Integer pilotesNumber;
 
   private BigDecimal totalOrderAmount;
+
+  private LocalDateTime createdAt;
+
 
   @ManyToOne(cascade= CascadeType.ALL)
   @JoinColumn(name = "customer_id")
