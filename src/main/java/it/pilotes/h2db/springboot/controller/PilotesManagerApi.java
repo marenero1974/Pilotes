@@ -18,14 +18,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface PilotesManagerApi {
 
   @RequestMapping(
-      value = "/pilotes-manager/orders/pilotes",
+      value = "/pilotes-manager/orders",
       produces = {"application/json"},
       method = RequestMethod.GET
   )
   ResponseEntity<List<PilotesOrder>> getAllPilotesOrders();
 
   @RequestMapping(
-      value = "/pilotes-manager/orders/pilotes/{customerPartialName}",
+      value = "/pilotes-manager/orders/{customerPartialName}",
       produces = {"application/json"},
       method = RequestMethod.GET
   )

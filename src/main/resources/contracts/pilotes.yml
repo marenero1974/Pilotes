@@ -63,7 +63,7 @@ paths:
           description: "Data not found"
         '500':
           description: "Internal error"
-  /pilotes-manager/orders/pilotes:
+  /pilotes-manager/orders:
     get:
       tags:
         - Private
@@ -113,7 +113,7 @@ paths:
           description: "Data not found"
         '500':
           description: "Internal error"
-  /pilotes-manager/orders/pilotes/{customerPartialName}:
+  /pilotes-manager/orders/{customerPartialName}:
     get:
       tags:
         - Private
