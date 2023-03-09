@@ -12,6 +12,7 @@ import it.pilotes.h2db.springboot.repositry.CustomerRepository;
 import it.pilotes.h2db.springboot.repositry.PilotesOrderRepository;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -127,7 +128,29 @@ public class PilotesManagerApiController implements PilotesManagerApi {
   @Override
   public ResponseEntity<PilotesOrder> modifyPilotesOrder(BigDecimal orderNumber,
       ModifyOrderRequest modifyOrderRequest) {
-    return null;
+
+    PilotesOrder pilotesOrderReturned = null;
+    if (isValidPilotesNumber(modifyOrderRequest.getPilotesNumber())) {
+      try {
+        PilotesOrderEntity pilotesOrder = pilotesOrderRepository.findByOrderNumber(orderNumber);
+        LocalDateTime now = LocalDateTime.now();
+        if(pilotesOrder.getCreatedAt().plusMinutes(5).isAfter(now)) {
+          pilotesOrder.setDeliveryAddress(modifyOrderRequest.getDeliveryAddress());
+          pilotesOrder.setPilotesNumber(modifyOrderRequest.getPilotesNumber());
+          pilotesOrderReturned = PilotesMapper.mapToDto(pilotesOrderRepository.save(pilotesOrder));
+        } else {
+          throw new Exception("Cannot process the mofication of the order because of work in porgress");
+        }
+      } catch (Exception e) {
+        logAppError("Error while modifing customer order", e);
+        return ResponseEntity.internalServerError().body(null);
+      }
+    } else {
+      logAppError("Error while modifing customer order: ", new IllegalArgumentException("The number of pilotes is not accepted"));
+      return ResponseEntity.internalServerError().body(null);
+    }
+
+    return ResponseEntity.ok().body(pilotesOrderReturned);
   }
 
   private void logAppError(String message, Exception e) {

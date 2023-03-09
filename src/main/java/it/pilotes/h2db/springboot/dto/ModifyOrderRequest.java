@@ -1,43 +1,17 @@
 package it.pilotes.h2db.springboot.dto;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.math.BigDecimal;
-import org.openapitools.jackson.nullable.JsonNullable;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import java.util.Objects;
 
 
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-07T22:31:07.048105500+01:00[Europe/Rome]")
-public class ModifyOrderRequest   {
-  @JsonProperty("orderNumber")
-  private BigDecimal orderNumber;
-
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-09T15:04:48.063291800+01:00[Europe/Rome]")
+public class ModifyOrderRequest {
   @JsonProperty("deliveryAddress")
   private String deliveryAddress;
 
   @JsonProperty("pilotesNumber")
   private Integer pilotesNumber;
-
-  /**
-   **/
-  public ModifyOrderRequest orderNumber(BigDecimal orderNumber) {
-    this.orderNumber = orderNumber;
-    return this;
-  }
-
-  
-  @ApiModelProperty(value = "")
-  @JsonProperty("orderNumber")
-  public BigDecimal getOrderNumber() {
-    return orderNumber;
-  }
-  public void setOrderNumber(BigDecimal orderNumber) {
-    this.orderNumber = orderNumber;
-  }
 
   /**
    **/
@@ -83,14 +57,13 @@ public class ModifyOrderRequest   {
       return false;
     }
     ModifyOrderRequest modifyOrderRequest = (ModifyOrderRequest) o;
-    return Objects.equals(orderNumber, modifyOrderRequest.orderNumber) &&
-        Objects.equals(deliveryAddress, modifyOrderRequest.deliveryAddress) &&
+    return Objects.equals(deliveryAddress, modifyOrderRequest.deliveryAddress) &&
         Objects.equals(pilotesNumber, modifyOrderRequest.pilotesNumber);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(orderNumber, deliveryAddress, pilotesNumber);
+    return Objects.hash(deliveryAddress, pilotesNumber);
   }
 
   @Override
@@ -98,7 +71,6 @@ public class ModifyOrderRequest   {
     StringBuilder sb = new StringBuilder();
     sb.append("class ModifyOrderRequest {\n");
     
-    sb.append("    orderNumber: ").append(toIndentedString(orderNumber)).append("\n");
     sb.append("    deliveryAddress: ").append(toIndentedString(deliveryAddress)).append("\n");
     sb.append("    pilotesNumber: ").append(toIndentedString(pilotesNumber)).append("\n");
     sb.append("}");

@@ -82,7 +82,7 @@ paths:
           description: "Data not found"
         '500':
           description: "Internal error"
-  /pilotes-manager/order/pilotes/{orderNumber}:
+  /pilotes-manager/order/{orderNumber}:
     patch:
       tags:
         - Private
@@ -192,8 +192,6 @@ components:
     ModifyOrderRequest:
       type: object
       properties:
-        orderNumber:
-          type: number
         deliveryAddress:
           type: string
         pilotesNumber:

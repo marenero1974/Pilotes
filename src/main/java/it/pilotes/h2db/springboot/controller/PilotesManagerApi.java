@@ -53,12 +53,11 @@ public interface PilotesManagerApi {
   ResponseEntity<PilotesOrder> insertPilotesOrder(@PathVariable("customerTelephone") String customerTelephone, @PathVariable("numberOfPilotes") String numberOfPilotes, @NotNull @RequestParam(value = "deliveryAddress", required = true) String deliveryAddress);
 
   @RequestMapping(
-      value = "/pilotes-manager/order/pilotes/{orderNumber}",
-      produces = {"application/json"},
-      consumes = {"application/json"},
+      value = "/pilotes-manager/order/{orderNumber}",
+      produces = { "application/json" },
+      consumes = { "application/json" },
       method = RequestMethod.PATCH
   )
-  ResponseEntity<PilotesOrder> modifyPilotesOrder(
-      @PathVariable("orderNumber") BigDecimal orderNumber,
-      @Valid @RequestBody ModifyOrderRequest modifyOrderRequest);
+  ResponseEntity<PilotesOrder> modifyPilotesOrder(@PathVariable("orderNumber") BigDecimal orderNumber, @Valid @RequestBody ModifyOrderRequest modifyOrderRequest);
+
 }
