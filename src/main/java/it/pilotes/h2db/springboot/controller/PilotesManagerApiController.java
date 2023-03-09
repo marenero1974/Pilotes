@@ -53,7 +53,19 @@ public class PilotesManagerApiController implements PilotesManagerApi {
   @Override
   public ResponseEntity<List<PilotesOrder>> getAllPilotesOrdersByName(
       String customerPartialName) {
-    return null;
+    List<CustomerEntity> customers;
+    List<PilotesOrderEntity> pilotesOrderEntityList = new ArrayList<>();
+    try {
+      customers = customerRepository.findCustomerEntitiesByNameContains(customerPartialName);
+      customers.forEach(cust -> {
+        List<PilotesOrderEntity> customerPilotes = cust.getPilotesOrderEntities();
+        pilotesOrderEntityList.addAll(customerPilotes);
+      });
+    } catch (Exception e) {
+      logAppError("Error while retrieving all orders by partial customer name", e);
+      return ResponseEntity.internalServerError().body(null);
+    }
+    return ResponseEntity.ok().body(PilotesMapper.mapOrdersToDto(pilotesOrderEntityList));
   }
 
   @Override
