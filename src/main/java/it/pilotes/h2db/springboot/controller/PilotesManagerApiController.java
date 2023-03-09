@@ -9,10 +9,13 @@ import it.pilotes.h2db.springboot.entity.PilotesOrderEntity;
 import it.pilotes.h2db.springboot.mapper.CustomerMapper;
 import it.pilotes.h2db.springboot.mapper.PilotesMapper;
 import it.pilotes.h2db.springboot.repositry.CustomerRepository;
+import it.pilotes.h2db.springboot.repositry.PilotesOrderRepository;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +33,21 @@ public class PilotesManagerApiController implements PilotesManagerApi {
   @Autowired
   CustomerRepository customerRepository;
 
+  @Autowired
+  PilotesOrderRepository pilotesOrderRepository;
+
 
   @Override
   public ResponseEntity<List<PilotesOrder>> getAllPilotesOrders() {
-    return null;
+    List<PilotesOrderEntity> result;
+    try {
+      result = StreamSupport.stream(pilotesOrderRepository.findAll().spliterator(), false)
+          .collect(Collectors.toList());
+    } catch (Exception e) {
+      logAppError("Error while retrieving all orders", e);
+      return ResponseEntity.internalServerError().body(null);
+    }
+    return ResponseEntity.ok().body(PilotesMapper.mapOrdersToDto(result));
   }
 
   @Override
@@ -131,7 +145,7 @@ public class PilotesManagerApiController implements PilotesManagerApi {
   }
 
   private long calculateRandomOrderNumber(PilotesOrderEntity p) {
-    long theRandomNum = (long) (Math.random() * Math.pow(10, 10));
+    long theRandomNum = (long) (Math.random() * Math.pow(6, 6));
     p.setOrderNumber(new BigDecimal(theRandomNum));
     return theRandomNum;
   }
