@@ -176,7 +176,7 @@ public class PilotesManagerApiController implements PilotesManagerApi {
     return list;
   }
 
-  private boolean isValidPilotesNumber(Integer numberOfPilotes) {
+  public static boolean isValidPilotesNumber(Integer numberOfPilotes) {
     return numberOfPilotes == 5 || numberOfPilotes == 10 || numberOfPilotes == 15;
   }
 

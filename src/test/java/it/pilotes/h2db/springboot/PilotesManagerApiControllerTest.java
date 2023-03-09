@@ -2,7 +2,9 @@ package it.pilotes.h2db.springboot;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.pilotes.h2db.springboot.controller.PilotesManagerApiController;
 import it.pilotes.h2db.springboot.dto.InsertCustomerRequest;
+import it.pilotes.h2db.springboot.dto.ModifyOrderRequest;
 import it.pilotes.h2db.springboot.dto.PilotesOrder;
 import it.pilotes.h2db.springboot.entity.CustomerEntity;
 import it.pilotes.h2db.springboot.entity.PilotesOrderEntity;
@@ -24,9 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -111,7 +113,7 @@ public class PilotesManagerApiControllerTest {
     customerRepository.save(customer);
     mvc.perform(get("/pilotes-manager/orders"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.length()").value(2));
+            .andExpect(jsonPath("$.length()").value(4));
     
   }
 
@@ -135,12 +137,99 @@ public class PilotesManagerApiControllerTest {
 
     mvc.perform(get("/pilotes-manager/orders/nam"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.length()").value(1));
+            .andExpect(jsonPath("$.length()").value(3));
 
   }
 
+  @Test
+  public void testGetAllOrdersIncorrectNumberOfPilotesByPartialCustomerName() throws Exception {
+    CustomerEntity customer = new CustomerEntity();
+    customer.setName("name");
+    customer.setSurname("surname");
+    customer.setTelephone("telephone3");
+    List<PilotesOrderEntity> pilotesOrderEntityList = new ArrayList<>();
+    if(PilotesManagerApiController.isValidPilotesNumber(1)) {
+      PilotesOrderEntity pilotesOrderEntity = new PilotesOrderEntity();
+      pilotesOrderEntity.setPilotesNumber(1);
+      pilotesOrderEntity.setDeliveryAddress("deliveryaddress");
+      pilotesOrderEntity.setCreatedAt(LocalDateTime.now());
+      pilotesOrderEntity.setOrderNumber(new BigDecimal(calculateRandomOrderNumber(pilotesOrderEntity)));
+      pilotesOrderEntity.setTotalOrderAmount(new BigDecimal(1.33 * pilotesOrderEntity.getPilotesNumber()));
+      pilotesOrderEntityList.add(pilotesOrderEntity);
+      pilotesOrderEntity.setCustomerEntity(customer);
+      customer.setPilotesOrderEntities(pilotesOrderEntityList);
+    }
+    customerRepository.save(customer);
+
+    mvc.perform(get("/pilotes-manager/orders/nam"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.length()").value(4));
+
+  }
+
+//  @Test
+//  public void testInsertPilotesOrderWithoutCustomer() throws Exception {
+//    mvc.perform(post("/pilotes-manager/order/2/pilotes/5")
+//                    .param("deliveryAddress", "delivery")
+//                    .contentType(MediaType.APPLICATION_JSON))
+//            .andExpect(status().isOk())
+//            .andExpect(content().contentType("application/json"))
+//            .andExpect(jsonPath("$.length()").value(1));
+//
+//  }
+
+  @Test
+  public void testInsertPilotesOrderWithCustomerAndIncorrectNumberOfPilotes() throws Exception {
+    CustomerEntity customer = new CustomerEntity();
+    customer.setName("name");
+    customer.setSurname("surname");
+    customer.setTelephone("telephone4");
+    List<PilotesOrderEntity> pilotesOrderEntityList = new ArrayList<>();
+    PilotesOrderEntity pilotesOrderEntity = new PilotesOrderEntity();
+    pilotesOrderEntity.setPilotesNumber(1);
+    pilotesOrderEntity.setDeliveryAddress("deliveryaddress");
+    pilotesOrderEntity.setCreatedAt(LocalDateTime.now());
+    pilotesOrderEntity.setOrderNumber(new BigDecimal(calculateRandomOrderNumber(pilotesOrderEntity)));
+    pilotesOrderEntity.setTotalOrderAmount(new BigDecimal(1.33 * pilotesOrderEntity.getPilotesNumber()));
+    pilotesOrderEntityList.add(pilotesOrderEntity);
+    pilotesOrderEntity.setCustomerEntity(customer);
+    customer.setPilotesOrderEntities(pilotesOrderEntityList);
+    customerRepository.save(customer);
+    mvc.perform(post("/pilotes-manager/order/2/pilotes/5")
+                    .param("deliveryAddress", "delivery")
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isInternalServerError());
+
+  }
+
+  @Test
+  public void testModifyOrder() throws Exception {
+    CustomerEntity customer = new CustomerEntity();
+    customer.setName("name");
+    customer.setSurname("surname");
+    customer.setTelephone("telephone5");
+    List<PilotesOrderEntity> pilotesOrderEntityList = new ArrayList<>();
+    PilotesOrderEntity pilotesOrderEntity = new PilotesOrderEntity();
+    pilotesOrderEntity.setPilotesNumber(5);
+    pilotesOrderEntity.setDeliveryAddress("deliveryaddress");
+    pilotesOrderEntity.setCreatedAt(LocalDateTime.now());
+    pilotesOrderEntity.setOrderNumber(new BigDecimal(calculateRandomOrderNumber(pilotesOrderEntity)));
+    pilotesOrderEntity.setTotalOrderAmount(new BigDecimal(1.33 * pilotesOrderEntity.getPilotesNumber()));
+    pilotesOrderEntityList.add(pilotesOrderEntity);
+    pilotesOrderEntity.setCustomerEntity(customer);
+    customer.setPilotesOrderEntities(pilotesOrderEntityList);
+
+    ModifyOrderRequest modifyOrderRequest = new ModifyOrderRequest();
+    modifyOrderRequest.setPilotesNumber(10);
+    modifyOrderRequest.setDeliveryAddress("new address");
+    customerRepository.save(customer);
+    mvc.perform(patch("/pilotes-manager/order/" + pilotesOrderEntity.getOrderNumber())
+            .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(modifyOrderRequest)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.deliveryAddress").value("new address"));
 
 
+  }
 
 
   private long calculateRandomOrderNumber(PilotesOrderEntity p) {
