@@ -66,9 +66,16 @@ public class PilotesManagerApiController implements PilotesManagerApi {
     logger.debug("Inserting new order of {} pilotes on the customer: {}", numberOfPilotes,
         customerTelephone);
 
-    if (isValidPilotesNumber())
+    if (isValidPilotesNumber(new Integer(numberOfPilotes))) {
+      return doProcessInsert(customerTelephone, numberOfPilotes, deliveryAddress);
+    } else {
+      logAppError("Error while saving customer order", new IllegalArgumentException("The number of pilotes in not accepted"));
+      return ResponseEntity.internalServerError().body(null);
+    }
+  }
 
-
+  private ResponseEntity<PilotesOrder> doProcessInsert(String customerTelephone,
+      String numberOfPilotes, String deliveryAddress) {
     try {
 
       CustomerEntity customerEntity = customerRepository.findCustomerEntitiesByTelephone(
@@ -79,6 +86,7 @@ public class PilotesManagerApiController implements PilotesManagerApi {
           new BigDecimal(calculateRandomOrderNumber(pilotesOrderEntity)));
       pilotesOrderEntity.setDeliveryAddress(deliveryAddress);
       pilotesOrderEntity.setCreatedAt(LocalDateTime.now());
+      pilotesOrderEntity.setTotalOrderAmount(new BigDecimal(new Integer(numberOfPilotes)*1.33));
       customerEntity.getPilotesOrderEntities().add(pilotesOrderEntity);
       customerRepository.save(customerEntity);
       return ResponseEntity.ok().body(PilotesMapper.mapToDto(pilotesOrderEntity));
@@ -99,7 +107,7 @@ public class PilotesManagerApiController implements PilotesManagerApi {
   private void logAppError(String message, Exception e) {
     StringBuilder errorMessage = new StringBuilder();
     errorMessage.append(message);
-    errorMessage.append(System.getProperty("line.separator"));
+    errorMessage.append(" ");
     errorMessage.append(e.getMessage());
     logger.error(errorMessage.toString());
   }
@@ -118,10 +126,8 @@ public class PilotesManagerApiController implements PilotesManagerApi {
     return list;
   }
 
-  private boolean isValidPilotesNumber(PilotesOrderEntity o) {
-    return o.getPilotesNumber() == 5
-        || o.getPilotesNumber() == 10
-        || o.getPilotesNumber() == 15;
+  private boolean isValidPilotesNumber(Integer numberOfPilotes) {
+    return numberOfPilotes == 5 || numberOfPilotes == 10 || numberOfPilotes == 15;
   }
 
   private long calculateRandomOrderNumber(PilotesOrderEntity p) {

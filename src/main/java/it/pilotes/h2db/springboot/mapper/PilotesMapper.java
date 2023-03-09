@@ -42,6 +42,7 @@ public class PilotesMapper {
   public static PilotesOrder mapToDto(PilotesOrderEntity pilotesOrderEntity) {
     PilotesOrder pilotesOrder = new PilotesOrder();
     if (pilotesOrderEntity != null) {
+      pilotesOrder.setOrderNumber(pilotesOrderEntity.getOrderNumber());
       pilotesOrder.setPilotesNumber(pilotesOrderEntity.getPilotesNumber());
       pilotesOrder.setCreatedAt(pilotesOrderEntity.getCreatedAt());
       pilotesOrder.setDeliveryAddress(pilotesOrderEntity.getDeliveryAddress());

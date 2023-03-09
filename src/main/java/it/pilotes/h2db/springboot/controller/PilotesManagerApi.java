@@ -46,6 +46,7 @@ public interface PilotesManagerApi {
 
   @RequestMapping(
       value = "/pilotes-manager/order/{customerTelephone}/pilotes/{numberOfPilotes}",
+      consumes = {"application/json"},
       produces = { "application/json" },
       method = RequestMethod.POST
   )
