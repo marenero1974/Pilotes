@@ -1,6 +1,5 @@
 package it.pilotes.h2db.springboot.mapper;
 
-import it.pilotes.h2db.springboot.dto.Customer;
 import it.pilotes.h2db.springboot.dto.InsertCustomerRequest;
 import it.pilotes.h2db.springboot.dto.PilotesOrder;
 import it.pilotes.h2db.springboot.entity.CustomerEntity;
