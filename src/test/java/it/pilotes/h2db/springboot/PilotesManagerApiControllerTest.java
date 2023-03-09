@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -38,7 +39,7 @@ public class PilotesManagerApiControllerTest {
   }
 
   @Test
-  public void testInsertCustomer() throws Exception {
+  public void testInsertCustomerWithCorrectNumberOfPilotes() throws Exception {
     // When
     InsertCustomerRequest insertCustomerRequest = new InsertCustomerRequest();
     insertCustomerRequest.setName("insertedname");
@@ -51,10 +52,32 @@ public class PilotesManagerApiControllerTest {
     pilotes.add(pilotesOrder1);
     insertCustomerRequest.setPilotesOrders(pilotes);
 
+    mvc.perform(post("/pilotes-manager/customer")
+                    .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(insertCustomerRequest)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.name").value("insertedname"))
+            .andExpect(jsonPath("$.pilotesOrders.length()").value(1));
+  }
+
+  @Test
+  public void testInsertCustomerWithIncorrectNumberOfPilotes() throws Exception {
+    // When
+    InsertCustomerRequest insertCustomerRequest = new InsertCustomerRequest();
+    insertCustomerRequest.setName("insertedname");
+    insertCustomerRequest.setSurname("insertedsurname");
+    insertCustomerRequest.setTelephoneNumber("1");
+    List<PilotesOrder> pilotes = new ArrayList<>();
+    PilotesOrder pilotesOrder1 = new PilotesOrder();
+    pilotesOrder1.setPilotesNumber(1);
+    pilotesOrder1.setDeliveryAddress("address");
+    pilotes.add(pilotesOrder1);
+    insertCustomerRequest.setPilotesOrders(pilotes);
 
     mvc.perform(post("/pilotes-manager/customer")
                     .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(insertCustomerRequest)))
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.name").value("insertedname"))
+            .andExpect(jsonPath("$.pilotesOrders.length()").value(0));
   }
 
 }
