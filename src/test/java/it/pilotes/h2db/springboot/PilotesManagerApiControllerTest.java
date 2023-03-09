@@ -7,6 +7,7 @@ import it.pilotes.h2db.springboot.dto.PilotesOrder;
 import it.pilotes.h2db.springboot.entity.CustomerEntity;
 import it.pilotes.h2db.springboot.entity.PilotesOrderEntity;
 import it.pilotes.h2db.springboot.repositry.CustomerRepository;
+import it.pilotes.h2db.springboot.repositry.PilotesOrderRepository;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
@@ -40,6 +41,9 @@ public class PilotesManagerApiControllerTest {
 
   @Autowired
   CustomerRepository customerRepository;
+
+  @Autowired
+  PilotesOrderRepository pilotesOrderRepository;
 
 
   @BeforeEach
@@ -110,6 +114,34 @@ public class PilotesManagerApiControllerTest {
             .andExpect(jsonPath("$.length()").value(1));
     
   }
+
+  @Test
+  public void testGetAllOrdersByPartialCustomerName() throws Exception {
+    CustomerEntity customer = new CustomerEntity();
+    customer.setName("name");
+    customer.setSurname("surname");
+    customer.setTelephone("telephone2");
+    List<PilotesOrderEntity> pilotesOrderEntityList = new ArrayList<>();
+    PilotesOrderEntity pilotesOrderEntity = new PilotesOrderEntity();
+    pilotesOrderEntity.setPilotesNumber(5);
+    pilotesOrderEntity.setDeliveryAddress("deliveryaddress");
+    pilotesOrderEntity.setCreatedAt(LocalDateTime.now());
+    pilotesOrderEntity.setOrderNumber(new BigDecimal(calculateRandomOrderNumber(pilotesOrderEntity)));
+    pilotesOrderEntity.setTotalOrderAmount(new BigDecimal(1.33 * pilotesOrderEntity.getPilotesNumber()));
+    pilotesOrderEntityList.add(pilotesOrderEntity);
+    pilotesOrderEntity.setCustomerEntity(customer);
+    customer.setPilotesOrderEntities(pilotesOrderEntityList);
+    customerRepository.save(customer);
+
+    mvc.perform(get("/pilotes-manager/orders/nam"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.length()").value(1));
+
+  }
+
+
+
+
 
   private long calculateRandomOrderNumber(PilotesOrderEntity p) {
     long theRandomNum = (long) (Math.random() * Math.pow(6, 6));
