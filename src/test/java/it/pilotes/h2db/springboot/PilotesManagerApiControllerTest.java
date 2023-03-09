@@ -111,7 +111,7 @@ public class PilotesManagerApiControllerTest {
     customerRepository.save(customer);
     mvc.perform(get("/pilotes-manager/orders"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.length()").value(1));
+            .andExpect(jsonPath("$.length()").value(2));
     
   }
 
