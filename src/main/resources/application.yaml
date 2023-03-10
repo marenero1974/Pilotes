@@ -23,3 +23,8 @@ springfox:
         path: /api-docs
 
 
+app:
+  jwtExpirationMs: 76300000
+  jwtSecret: password
+
+
