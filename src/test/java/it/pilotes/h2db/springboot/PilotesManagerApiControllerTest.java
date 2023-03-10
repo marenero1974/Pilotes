@@ -94,6 +94,25 @@ public class PilotesManagerApiControllerTest {
             .andExpect(jsonPath("$.name").value("insertedname"))
             .andExpect(jsonPath("$.pilotesOrders.length()").value(0));
   }
+
+  @Test
+  public void testInsertCustomerWithException() throws Exception {
+
+    InsertCustomerRequest insertCustomerRequest = new InsertCustomerRequest();
+    insertCustomerRequest.setName("insertedname");
+    insertCustomerRequest.setSurname("insertedsurname");
+    insertCustomerRequest.setTelephoneNumber("telephone4");
+    List<PilotesOrder> pilotes = new ArrayList<>();
+    PilotesOrder pilotesOrder1 = new PilotesOrder();
+    pilotesOrder1.setPilotesNumber(1);
+    pilotesOrder1.setDeliveryAddress("address");
+    pilotes.add(pilotesOrder1);
+    insertCustomerRequest.setPilotesOrders(pilotes);
+
+    mvc.perform(post("/pilotes-manager/customer")
+                    .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(insertCustomerRequest)))
+            .andExpect(status().isInternalServerError());
+  }
   
   @Test
   public void testGetAllPilotesOrder() throws Exception {
@@ -227,8 +246,58 @@ public class PilotesManagerApiControllerTest {
             .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(modifyOrderRequest)))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.deliveryAddress").value("new address"));
+  }
 
+  @Test
+  public void testModifyOrderAfterFiveMinutes() throws Exception {
+    CustomerEntity customer = new CustomerEntity();
+    customer.setName("name");
+    customer.setSurname("surname");
+    customer.setTelephone("telephone6");
+    List<PilotesOrderEntity> pilotesOrderEntityList = new ArrayList<>();
+    PilotesOrderEntity pilotesOrderEntity = new PilotesOrderEntity();
+    pilotesOrderEntity.setPilotesNumber(5);
+    pilotesOrderEntity.setDeliveryAddress("deliveryaddress");
+    pilotesOrderEntity.setCreatedAt(LocalDateTime.now().minusMinutes(10));
+    pilotesOrderEntity.setOrderNumber(new BigDecimal(calculateRandomOrderNumber(pilotesOrderEntity)));
+    pilotesOrderEntity.setTotalOrderAmount(new BigDecimal(1.33 * pilotesOrderEntity.getPilotesNumber()));
+    pilotesOrderEntityList.add(pilotesOrderEntity);
+    pilotesOrderEntity.setCustomerEntity(customer);
+    customer.setPilotesOrderEntities(pilotesOrderEntityList);
 
+    ModifyOrderRequest modifyOrderRequest = new ModifyOrderRequest();
+    modifyOrderRequest.setPilotesNumber(10);
+    modifyOrderRequest.setDeliveryAddress("new address");
+    customerRepository.save(customer);
+    mvc.perform(patch("/pilotes-manager/order/" + pilotesOrderEntity.getOrderNumber())
+                    .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(modifyOrderRequest)))
+            .andExpect(status().isInternalServerError());
+  }
+
+  @Test
+  public void testModifyOrderWrongOrderNumberWrongNumberOfPilotes() throws Exception {
+    CustomerEntity customer = new CustomerEntity();
+    customer.setName("name");
+    customer.setSurname("surname");
+    customer.setTelephone("telephone7");
+    List<PilotesOrderEntity> pilotesOrderEntityList = new ArrayList<>();
+    PilotesOrderEntity pilotesOrderEntity = new PilotesOrderEntity();
+    pilotesOrderEntity.setPilotesNumber(1);
+    pilotesOrderEntity.setDeliveryAddress("deliveryaddress");
+    pilotesOrderEntity.setCreatedAt(LocalDateTime.now().minusMinutes(10));
+    pilotesOrderEntity.setOrderNumber(new BigDecimal(calculateRandomOrderNumber(pilotesOrderEntity)));
+    pilotesOrderEntity.setTotalOrderAmount(new BigDecimal(1.33 * pilotesOrderEntity.getPilotesNumber()));
+    pilotesOrderEntityList.add(pilotesOrderEntity);
+    pilotesOrderEntity.setCustomerEntity(customer);
+    customer.setPilotesOrderEntities(pilotesOrderEntityList);
+
+    ModifyOrderRequest modifyOrderRequest = new ModifyOrderRequest();
+    modifyOrderRequest.setPilotesNumber(10);
+    modifyOrderRequest.setDeliveryAddress("new address");
+    customerRepository.save(customer);
+    mvc.perform(patch("/pilotes-manager/order/11")
+                    .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(modifyOrderRequest)))
+            .andExpect(status().isInternalServerError());
   }
 
 
