@@ -1,8 +1,7 @@
 package it.pilotes.h2db.springboot.security;
 
-import com.knf.dev.security.jwt.AuthEntryPointJwt;
-import com.knf.dev.security.jwt.AuthTokenFilter;
-import com.knf.dev.security.services.EmployeeDetailsServiceImpl;
+import it.pilotes.h2db.springboot.security.jwt.AuthEntryPointJwt;
+import it.pilotes.h2db.springboot.security.jwt.AuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +30,11 @@ public class WebSecurityConfig {
 
 		http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-				.antMatchers("/api/auth/**").permitAll().antMatchers("/api/test/**").permitAll().anyRequest()
+				.antMatchers("/pilotes-manager/customer/**").permitAll()
+				.antMatchers("/pilotes-manager/order/**").permitAll()
+				.antMatchers("/pilotes-manager/order/pilotes/**").permitAll()
+
+				.anyRequest()
 				.authenticated();
 
 		http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

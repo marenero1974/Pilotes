@@ -1,6 +1,7 @@
 package it.pilotes.h2db.springboot.security.jwt;
 
 import io.jsonwebtoken.*;
+import it.pilotes.h2db.springboot.services.UserDetailsImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,6 +40,9 @@ public class JwtUtils {
 	}
 
 	public String generateJwtToken(Authentication authentication) {
+
+		UserDetailsImpl employeePrincipal = (UserDetailsImpl) authentication.getPrincipal();
+
 
 		return Jwts.builder().setSubject(("username")).setIssuedAt(new Date())
 				.setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))

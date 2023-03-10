@@ -1,8 +1,11 @@
 package it.pilotes.h2db.springboot.services;
 
-import com.knf.dev.models.Employee;
-import com.knf.dev.repository.EmployeeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import it.pilotes.h2db.springboot.dto.security.Role;
+import it.pilotes.h2db.springboot.dto.security.User;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,17 +15,21 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-	@Autowired
-	EmployeeRepository employeeRepository;
-
 	@Override
 	@Transactional
 	public UserDetails loadUserByUsername(String employeename) throws UsernameNotFoundException {
 
-		Employee employee = employeeRepository.findByEmployeename(employeename)
-				.orElseThrow(() -> new UsernameNotFoundException("Employee Not Found with username: " + employeename));
+		User user = new User();
+		user.setUserename("username");
+		user.setPassword("password");
+		Set<Role> roles = new HashSet<>();
+		Role role = new Role();
+		role.setId("1");
+		role.setName("ADMIN");
+		roles.add(role);
+		user.setRoles(roles);
 
-		return UserDetailsImpl.build(employee);
+		return UserDetailsImpl.build(user);
 	}
 
 }
