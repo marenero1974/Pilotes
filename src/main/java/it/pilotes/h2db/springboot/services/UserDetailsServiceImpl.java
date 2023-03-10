@@ -2,9 +2,7 @@ package it.pilotes.h2db.springboot.services;
 
 import it.pilotes.h2db.springboot.dto.security.Role;
 import it.pilotes.h2db.springboot.dto.security.User;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,7 +15,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Override
 	@Transactional
-	public UserDetails loadUserByUsername(String employeename) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
 		User user = new User();
 		user.setUserename("username");

@@ -10,6 +10,8 @@ import it.pilotes.h2db.springboot.mapper.CustomerMapper;
 import it.pilotes.h2db.springboot.mapper.PilotesMapper;
 import it.pilotes.h2db.springboot.repositry.CustomerRepository;
 import it.pilotes.h2db.springboot.repositry.PilotesOrderRepository;
+import it.pilotes.h2db.springboot.response.JwtResponse;
+import it.pilotes.h2db.springboot.security.jwt.JwtUtils;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,10 +21,9 @@ import java.util.stream.StreamSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-03-07T22:49:10.180210100+01:00[Europe/Rome]")
@@ -37,6 +38,12 @@ public class PilotesManagerApiController implements PilotesManagerApi {
 
   @Autowired
   PilotesOrderRepository pilotesOrderRepository;
+
+  @Autowired
+  AuthenticationManager authenticationManager;
+
+  @Autowired
+  JwtUtils jwtUtils;
 
 
   @Override
@@ -152,6 +159,17 @@ public class PilotesManagerApiController implements PilotesManagerApi {
     }
 
     return ResponseEntity.ok().body(pilotesOrderReturned);
+  }
+
+  @Override
+  public ResponseEntity<?> generateJwtToken() {
+
+    String jwt = jwtUtils.generateJwtToken();
+    List<String> roles = new ArrayList<>();
+    roles.add("ADMIN");
+
+    return ResponseEntity.ok(new JwtResponse(jwt, "1", "username",
+        "email", roles));
   }
 
   private void logAppError(String message, Exception e) {

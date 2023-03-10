@@ -30,8 +30,8 @@ public class User {
     return username;
   }
 
-  public void setUserename(String employeename) {
-    this.username = employeename;
+  public void setUserename(String userename) {
+    this.username = userename;
   }
 
   public String getId() {

@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -130,7 +131,8 @@ public class PilotesManagerApiControllerTest {
     pilotesOrderEntityList.add(pilotesOrderEntity);
     customer.setPilotesOrderEntities(pilotesOrderEntityList);
     customerRepository.save(customer);
-    mvc.perform(get("/pilotes-manager/orders"))
+    mvc.perform(get("/pilotes-manager/orders")
+        .header(HttpHeaders.AUTHORIZATION, "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VybmFtZSIsImlhdCI6MTY3ODQ2MDk5NywiZXhwIjoxNjc4NTM3Mjk3fQ.iJTIkqrSEkw2lk3Y1q9TfoUXW-3sglMV5qOUUroQ2nMl0XBzpf7mAu_cebqTonfec-iNwmBgdgEBd902xY1MLg"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.length()").value(4));
     
@@ -154,7 +156,8 @@ public class PilotesManagerApiControllerTest {
     customer.setPilotesOrderEntities(pilotesOrderEntityList);
     customerRepository.save(customer);
 
-    mvc.perform(get("/pilotes-manager/orders/nam"))
+    mvc.perform(get("/pilotes-manager/orders/nam")
+        .header(HttpHeaders.AUTHORIZATION, "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VybmFtZSIsImlhdCI6MTY3ODQ2MDk5NywiZXhwIjoxNjc4NTM3Mjk3fQ.iJTIkqrSEkw2lk3Y1q9TfoUXW-3sglMV5qOUUroQ2nMl0XBzpf7mAu_cebqTonfec-iNwmBgdgEBd902xY1MLg"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.length()").value(3));
 
@@ -180,22 +183,12 @@ public class PilotesManagerApiControllerTest {
     }
     customerRepository.save(customer);
 
-    mvc.perform(get("/pilotes-manager/orders/nam"))
+    mvc.perform(get("/pilotes-manager/orders/nam")
+        .header(HttpHeaders.AUTHORIZATION, "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VybmFtZSIsImlhdCI6MTY3ODQ2MDk5NywiZXhwIjoxNjc4NTM3Mjk3fQ.iJTIkqrSEkw2lk3Y1q9TfoUXW-3sglMV5qOUUroQ2nMl0XBzpf7mAu_cebqTonfec-iNwmBgdgEBd902xY1MLg"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.length()").value(4));
 
   }
-
-//  @Test
-//  public void testInsertPilotesOrderWithoutCustomer() throws Exception {
-//    mvc.perform(post("/pilotes-manager/order/2/pilotes/5")
-//                    .param("deliveryAddress", "delivery")
-//                    .contentType(MediaType.APPLICATION_JSON))
-//            .andExpect(status().isOk())
-//            .andExpect(content().contentType("application/json"))
-//            .andExpect(jsonPath("$.length()").value(1));
-//
-//  }
 
   @Test
   public void testInsertPilotesOrderWithCustomerAndIncorrectNumberOfPilotes() throws Exception {

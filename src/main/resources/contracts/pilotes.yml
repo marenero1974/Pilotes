@@ -139,6 +139,20 @@ paths:
           description: "Data not found"
         '500':
           description: "Internal error"
+  /pilotes-manager/generate-token:
+    post:
+      tags:
+        - Private
+      summary: "Generate jwt token"
+      operationId: "generateJwtToken"
+      responses:
+        '200':
+          description: "successful operation"
+        '404':
+          description: "Data not found"
+        '500':
+          description: "Internal error"
+
 
 
 components:

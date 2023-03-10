@@ -33,7 +33,7 @@ public class WebSecurityConfig {
 				.antMatchers("/pilotes-manager/customer/**").permitAll()
 				.antMatchers("/pilotes-manager/order/**").permitAll()
 				.antMatchers("/pilotes-manager/order/pilotes/**").permitAll()
-
+				.antMatchers("/pilotes-manager/generate-token/").permitAll()
 				.anyRequest()
 				.authenticated();
 

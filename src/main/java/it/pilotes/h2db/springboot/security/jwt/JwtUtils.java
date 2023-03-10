@@ -1,11 +1,9 @@
 package it.pilotes.h2db.springboot.security.jwt;
 
 import io.jsonwebtoken.*;
-import it.pilotes.h2db.springboot.services.UserDetailsImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -39,17 +37,14 @@ public class JwtUtils {
 		return false;
 	}
 
-	public String generateJwtToken(Authentication authentication) {
-
-		UserDetailsImpl employeePrincipal = (UserDetailsImpl) authentication.getPrincipal();
-
+	public String generateJwtToken() {
 
 		return Jwts.builder().setSubject(("username")).setIssuedAt(new Date())
 				.setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
 				.signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
 	}
 
-	public String getEmployeeNameFromJwtToken(String token) {
+	public String getUsernameFromJwtToken(String token) {
 		return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
 	}
 

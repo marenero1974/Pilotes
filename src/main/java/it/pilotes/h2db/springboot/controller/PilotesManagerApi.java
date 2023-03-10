@@ -60,4 +60,11 @@ public interface PilotesManagerApi {
   )
   ResponseEntity<PilotesOrder> modifyPilotesOrder(@PathVariable("orderNumber") BigDecimal orderNumber, @Valid @RequestBody ModifyOrderRequest modifyOrderRequest);
 
+  @RequestMapping(
+      value = "/pilotes-manager/generate-token",
+
+      method = RequestMethod.POST
+  )
+  ResponseEntity<?> generateJwtToken();
+
 }
