@@ -17,11 +17,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-		User user = new User();
+		var user = new User();
 		user.setUserename("username");
 		user.setPassword("password");
 		Set<Role> roles = new HashSet<>();
-		Role role = new Role();
+		var role = new Role();
 		role.setId("1");
 		role.setName("ADMIN");
 		roles.add(role);

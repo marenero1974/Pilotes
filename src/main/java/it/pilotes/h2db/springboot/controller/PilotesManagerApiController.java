@@ -80,7 +80,7 @@ public class PilotesManagerApiController implements PilotesManagerApi {
   @Override
   public ResponseEntity<Customer> insertCustomer(InsertCustomerRequest insertCustomerRequest) {
     logger.debug("Inserting customer {}", insertCustomerRequest);
-    CustomerEntity customerEntity = CustomerMapper.mapToEntity(insertCustomerRequest);
+    var customerEntity = CustomerMapper.mapToEntity(insertCustomerRequest);
     customerEntity.setPilotesOrderEntities(getOrdersWithNumber(customerEntity));
 
     CustomerEntity savedCustomer = null;
@@ -113,9 +113,9 @@ public class PilotesManagerApiController implements PilotesManagerApi {
       String numberOfPilotes, String deliveryAddress) {
     try {
 
-      CustomerEntity customerEntity = customerRepository.findCustomerEntitiesByTelephone(
+      var customerEntity = customerRepository.findCustomerEntitiesByTelephone(
           customerTelephone);
-      PilotesOrderEntity pilotesOrderEntity = new PilotesOrderEntity();
+      var pilotesOrderEntity = new PilotesOrderEntity();
       pilotesOrderEntity.setPilotesNumber(new Integer(numberOfPilotes));
       pilotesOrderEntity.setOrderNumber(
           new BigDecimal(calculateRandomOrderNumber(pilotesOrderEntity)));
@@ -140,7 +140,7 @@ public class PilotesManagerApiController implements PilotesManagerApi {
     PilotesOrder pilotesOrderReturned = null;
     if (isValidPilotesNumber(modifyOrderRequest.getPilotesNumber())) {
       try {
-        PilotesOrderEntity pilotesOrder = pilotesOrderRepository.findByOrderNumber(orderNumber);
+        var pilotesOrder = pilotesOrderRepository.findByOrderNumber(orderNumber);
         LocalDateTime now = LocalDateTime.now();
         if(pilotesOrder.getCreatedAt().plusMinutes(5).isAfter(now)) {
           pilotesOrder.setDeliveryAddress(modifyOrderRequest.getDeliveryAddress());
@@ -173,7 +173,7 @@ public class PilotesManagerApiController implements PilotesManagerApi {
   }
 
   private void logAppError(String message, Exception e) {
-    StringBuilder errorMessage = new StringBuilder();
+    var errorMessage = new StringBuilder();
     errorMessage.append(message);
     errorMessage.append(" ");
     errorMessage.append(e.getMessage());
