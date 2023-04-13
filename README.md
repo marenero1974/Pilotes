@@ -4,10 +4,10 @@ Manage Pilotes orders by restful apis:
 
 This is a spring boot application released under the branch "main".
 
-It is dokerized and there is a dokercompose yaml file but not tested because I had problems installing
-the doker desktop on my machine.
-The image is built with:
-docker build -t pilotes-management-h2-image and compose is run with the command:
+It is dokerized and there is a dokercompose yaml file.
+The docker image is built with:
+docker build -t pilotes-management-h2-image . 
+and compose is run with the command:
 docker-compose -f docker-compose-server-h2.yml up -d
 
 The app can be run launching the java class SpringBootH2Application in the root of the sources.

@@ -4,5 +4,5 @@ RUN mkdir -p /application/
 COPY target/pilotes-management-1.0.0-SNAPSHOT.jar /application/
 ENTRYPOINT ["java"]
 CMD [ "-jar", \
-    "/application/pilotes-management-1.0.0-SNAPSHOT" \
+    "/application/pilotes-management-1.0.0-SNAPSHOT.jar" \
 ]
